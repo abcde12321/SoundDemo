@@ -13,8 +13,11 @@ class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if let scene = GameScene(fileNamed:"GameScene") {
+        
+        let name = self.title
+        loadGameScene(name!)
+        
+        /*if let scene = GameScene(fileNamed:name) {
             // Configure the view.
             let skView = self.view as! SKView
             skView.showsFPS = true
@@ -26,6 +29,33 @@ class GameViewController: UIViewController {
             /* Set the scale mode to scale to fit the window */
             scene.scaleMode = .AspectFill
             
+            skView.presentScene(scene)
+        }*/
+    }
+    
+    func loadGameScene(gameScene:String){
+        let scene:SKScene?;
+        
+        if(gameScene=="SurroundSoundScene"){
+            scene = SurroundSoundScene(fileNamed:gameScene)!
+        }else if (gameScene == "BandScene"){
+            scene = BandScene(fileNamed:gameScene)!
+        }else if (gameScene == "AudibleCoachScene"){
+            scene = AudibleCoachScene(fileNamed:gameScene)!
+        }else{
+            scene = SurroundSoundScene(fileNamed:gameScene)!
+        }
+        
+        if scene != nil {
+            // Configure the view.
+            let skView = self.view as! SKView
+            skView.showsFPS = true
+            skView.showsNodeCount = true
+            /* Sprite Kit applies additional optimizations to improve rendering performance */
+            skView.ignoresSiblingOrder = true
+            /* Set the scale mode to scale to fit the window */
+            scene!.scaleMode = .AspectFill
+            scene!.size = self.view.frame.size
             skView.presentScene(scene)
         }
     }

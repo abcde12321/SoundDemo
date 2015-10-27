@@ -7,15 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B5016E471BDE379200A9A258 /* bass_mono.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E431BDE379200A9A258 /* bass_mono.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E481BDE379200A9A258 /* drumkit_mono.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E441BDE379200A9A258 /* drumkit_mono.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E491BDE379200A9A258 /* piano_mono.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E451BDE379200A9A258 /* piano_mono.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E4A1BDE379200A9A258 /* sax_mono.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E461BDE379200A9A258 /* sax_mono.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E521BDE3CF500A9A258 /* bounce.caf in Resources */ = {isa = PBXBuildFile; fileRef = B5016E4D1BDE3CF500A9A258 /* bounce.caf */; settings = {ASSET_TAGS = (); }; };
+		B5016E531BDE3CF500A9A258 /* launchSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = B5016E4E1BDE3CF500A9A258 /* launchSound.caf */; settings = {ASSET_TAGS = (); }; };
+		B5016E541BDE3CF500A9A258 /* Crackling_Fireplace.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E4F1BDE3CF500A9A258 /* Crackling_Fireplace.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E551BDE3CF500A9A258 /* water-streamMono.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E501BDE3CF500A9A258 /* water-streamMono.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E561BDE3CF500A9A258 /* water-stream.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E511BDE3CF500A9A258 /* water-stream.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E5A1BDE3D9700A9A258 /* SurroundSoundScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5016E591BDE3D9700A9A258 /* SurroundSoundScene.swift */; settings = {ASSET_TAGS = (); }; };
+		B5016E5C1BDE63D300A9A258 /* SurroundSoundScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = B5016E5B1BDE63D300A9A258 /* SurroundSoundScene.sks */; settings = {ASSET_TAGS = (); }; };
+		B5016E5E1BDE641B00A9A258 /* BandScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = B5016E5D1BDE641B00A9A258 /* BandScene.sks */; settings = {ASSET_TAGS = (); }; };
+		B5016E631BDE64DA00A9A258 /* heartbeat_mono.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E5F1BDE64DA00A9A258 /* heartbeat_mono.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E641BDE64DA00A9A258 /* one_two_three_testing.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E601BDE64DA00A9A258 /* one_two_three_testing.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E651BDE64DA00A9A258 /* running-track.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B5016E611BDE64DA00A9A258 /* running-track.jpg */; settings = {ASSET_TAGS = (); }; };
+		B5016E661BDE64DA00A9A258 /* shia_mono.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5016E621BDE64DA00A9A258 /* shia_mono.wav */; settings = {ASSET_TAGS = (); }; };
+		B5016E691BDE6E3A00A9A258 /* AudibleCoachScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = B5016E671BDE6E3A00A9A258 /* AudibleCoachScene.sks */; settings = {ASSET_TAGS = (); }; };
+		B5016E6A1BDE6E3A00A9A258 /* AudibleCoachScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5016E681BDE6E3A00A9A258 /* AudibleCoachScene.swift */; settings = {ASSET_TAGS = (); }; };
+		B5016E6C1BDE875F00A9A258 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5016E6B1BDE875F00A9A258 /* GameScene.swift */; settings = {ASSET_TAGS = (); }; };
+		B5016E6D1BDE875F00A9A258 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5016E6B1BDE875F00A9A258 /* GameScene.swift */; settings = {ASSET_TAGS = (); }; };
+		B5016E6E1BDE875F00A9A258 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5016E6B1BDE875F00A9A258 /* GameScene.swift */; settings = {ASSET_TAGS = (); }; };
 		B5DC8C261BD8CAE100397D95 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC8C251BD8CAE100397D95 /* AppDelegate.swift */; };
-		B5DC8C281BD8CAE100397D95 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = B5DC8C271BD8CAE100397D95 /* GameScene.sks */; };
-		B5DC8C2A1BD8CAE100397D95 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC8C291BD8CAE100397D95 /* GameScene.swift */; };
+		B5DC8C2A1BD8CAE100397D95 /* BandScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC8C291BD8CAE100397D95 /* BandScene.swift */; };
 		B5DC8C2C1BD8CAE100397D95 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC8C2B1BD8CAE100397D95 /* GameViewController.swift */; };
 		B5DC8C2F1BD8CAE100397D95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5DC8C2D1BD8CAE100397D95 /* Main.storyboard */; };
 		B5DC8C311BD8CAE100397D95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5DC8C301BD8CAE100397D95 /* Assets.xcassets */; };
 		B5DC8C341BD8CAE100397D95 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5DC8C321BD8CAE100397D95 /* LaunchScreen.storyboard */; };
 		B5DC8C3F1BD8CAE100397D95 /* SoundDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC8C3E1BD8CAE100397D95 /* SoundDemoTests.swift */; };
 		B5DC8C4A1BD8CAE100397D95 /* SoundDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC8C491BD8CAE100397D95 /* SoundDemoUITests.swift */; };
+		B5DC8C591BD8E2D100397D95 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = B5DC8C571BD8E2D100397D95 /* iTunesArtwork.png */; settings = {ASSET_TAGS = (); }; };
+		B5DC8C5A1BD8E2D100397D95 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5DC8C581BD8E2D100397D95 /* iTunesArtwork@2x.png */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,10 +58,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B5016E431BDE379200A9A258 /* bass_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bass_mono.wav; sourceTree = "<group>"; };
+		B5016E441BDE379200A9A258 /* drumkit_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = drumkit_mono.wav; sourceTree = "<group>"; };
+		B5016E451BDE379200A9A258 /* piano_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = piano_mono.wav; sourceTree = "<group>"; };
+		B5016E461BDE379200A9A258 /* sax_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sax_mono.wav; sourceTree = "<group>"; };
+		B5016E4D1BDE3CF500A9A258 /* bounce.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = bounce.caf; sourceTree = "<group>"; };
+		B5016E4E1BDE3CF500A9A258 /* launchSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = launchSound.caf; sourceTree = "<group>"; };
+		B5016E4F1BDE3CF500A9A258 /* Crackling_Fireplace.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Crackling_Fireplace.wav; sourceTree = "<group>"; };
+		B5016E501BDE3CF500A9A258 /* water-streamMono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "water-streamMono.wav"; sourceTree = "<group>"; };
+		B5016E511BDE3CF500A9A258 /* water-stream.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "water-stream.wav"; sourceTree = "<group>"; };
+		B5016E591BDE3D9700A9A258 /* SurroundSoundScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurroundSoundScene.swift; sourceTree = "<group>"; };
+		B5016E5B1BDE63D300A9A258 /* SurroundSoundScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SurroundSoundScene.sks; sourceTree = "<group>"; };
+		B5016E5D1BDE641B00A9A258 /* BandScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BandScene.sks; sourceTree = "<group>"; };
+		B5016E5F1BDE64DA00A9A258 /* heartbeat_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = heartbeat_mono.wav; sourceTree = "<group>"; };
+		B5016E601BDE64DA00A9A258 /* one_two_three_testing.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = one_two_three_testing.wav; sourceTree = "<group>"; };
+		B5016E611BDE64DA00A9A258 /* running-track.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "running-track.jpg"; sourceTree = "<group>"; };
+		B5016E621BDE64DA00A9A258 /* shia_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = shia_mono.wav; sourceTree = "<group>"; };
+		B5016E671BDE6E3A00A9A258 /* AudibleCoachScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = AudibleCoachScene.sks; sourceTree = "<group>"; };
+		B5016E681BDE6E3A00A9A258 /* AudibleCoachScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudibleCoachScene.swift; sourceTree = "<group>"; };
+		B5016E6B1BDE875F00A9A258 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		B5DC8C221BD8CAE100397D95 /* SoundDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SoundDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5DC8C251BD8CAE100397D95 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B5DC8C271BD8CAE100397D95 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
-		B5DC8C291BD8CAE100397D95 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		B5DC8C291BD8CAE100397D95 /* BandScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandScene.swift; sourceTree = "<group>"; };
 		B5DC8C2B1BD8CAE100397D95 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		B5DC8C2E1BD8CAE100397D95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B5DC8C301BD8CAE100397D95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -51,6 +91,8 @@
 		B5DC8C451BD8CAE100397D95 /* SoundDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5DC8C491BD8CAE100397D95 /* SoundDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundDemoUITests.swift; sourceTree = "<group>"; };
 		B5DC8C4B1BD8CAE100397D95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B5DC8C571BD8E2D100397D95 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
+		B5DC8C581BD8E2D100397D95 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +120,46 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B5016E3D1BD90D8100A9A258 /* 3dBand */ = {
+			isa = PBXGroup;
+			children = (
+				B5DC8C291BD8CAE100397D95 /* BandScene.swift */,
+				B5016E5D1BDE641B00A9A258 /* BandScene.sks */,
+				B5016E431BDE379200A9A258 /* bass_mono.wav */,
+				B5016E441BDE379200A9A258 /* drumkit_mono.wav */,
+				B5016E451BDE379200A9A258 /* piano_mono.wav */,
+				B5016E461BDE379200A9A258 /* sax_mono.wav */,
+			);
+			name = 3dBand;
+			sourceTree = "<group>";
+		};
+		B5016E4B1BDE3A4100A9A258 /* AudibleCoach */ = {
+			isa = PBXGroup;
+			children = (
+				B5016E671BDE6E3A00A9A258 /* AudibleCoachScene.sks */,
+				B5016E681BDE6E3A00A9A258 /* AudibleCoachScene.swift */,
+				B5016E5F1BDE64DA00A9A258 /* heartbeat_mono.wav */,
+				B5016E601BDE64DA00A9A258 /* one_two_three_testing.wav */,
+				B5016E611BDE64DA00A9A258 /* running-track.jpg */,
+				B5016E621BDE64DA00A9A258 /* shia_mono.wav */,
+			);
+			name = AudibleCoach;
+			sourceTree = "<group>";
+		};
+		B5016E4C1BDE3A5B00A9A258 /* SurroundSound */ = {
+			isa = PBXGroup;
+			children = (
+				B5016E591BDE3D9700A9A258 /* SurroundSoundScene.swift */,
+				B5016E5B1BDE63D300A9A258 /* SurroundSoundScene.sks */,
+				B5016E4D1BDE3CF500A9A258 /* bounce.caf */,
+				B5016E4E1BDE3CF500A9A258 /* launchSound.caf */,
+				B5016E4F1BDE3CF500A9A258 /* Crackling_Fireplace.wav */,
+				B5016E501BDE3CF500A9A258 /* water-streamMono.wav */,
+				B5016E511BDE3CF500A9A258 /* water-stream.wav */,
+			);
+			name = SurroundSound;
+			sourceTree = "<group>";
+		};
 		B5DC8C191BD8CAE100397D95 = {
 			isa = PBXGroup;
 			children = (
@@ -101,14 +183,18 @@
 		B5DC8C241BD8CAE100397D95 /* SoundDemo */ = {
 			isa = PBXGroup;
 			children = (
+				B5016E4C1BDE3A5B00A9A258 /* SurroundSound */,
+				B5016E3D1BD90D8100A9A258 /* 3dBand */,
+				B5016E4B1BDE3A4100A9A258 /* AudibleCoach */,
 				B5DC8C251BD8CAE100397D95 /* AppDelegate.swift */,
-				B5DC8C271BD8CAE100397D95 /* GameScene.sks */,
-				B5DC8C291BD8CAE100397D95 /* GameScene.swift */,
 				B5DC8C2B1BD8CAE100397D95 /* GameViewController.swift */,
 				B5DC8C2D1BD8CAE100397D95 /* Main.storyboard */,
 				B5DC8C301BD8CAE100397D95 /* Assets.xcassets */,
 				B5DC8C321BD8CAE100397D95 /* LaunchScreen.storyboard */,
 				B5DC8C351BD8CAE100397D95 /* Info.plist */,
+				B5DC8C571BD8E2D100397D95 /* iTunesArtwork.png */,
+				B5DC8C581BD8E2D100397D95 /* iTunesArtwork@2x.png */,
+				B5016E6B1BDE875F00A9A258 /* GameScene.swift */,
 			);
 			path = SoundDemo;
 			sourceTree = "<group>";
@@ -234,10 +320,27 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5DC8C281BD8CAE100397D95 /* GameScene.sks in Resources */,
+				B5016E491BDE379200A9A258 /* piano_mono.wav in Resources */,
+				B5016E521BDE3CF500A9A258 /* bounce.caf in Resources */,
+				B5DC8C5A1BD8E2D100397D95 /* iTunesArtwork@2x.png in Resources */,
 				B5DC8C341BD8CAE100397D95 /* LaunchScreen.storyboard in Resources */,
+				B5016E691BDE6E3A00A9A258 /* AudibleCoachScene.sks in Resources */,
 				B5DC8C311BD8CAE100397D95 /* Assets.xcassets in Resources */,
+				B5016E4A1BDE379200A9A258 /* sax_mono.wav in Resources */,
+				B5016E651BDE64DA00A9A258 /* running-track.jpg in Resources */,
+				B5DC8C591BD8E2D100397D95 /* iTunesArtwork.png in Resources */,
+				B5016E531BDE3CF500A9A258 /* launchSound.caf in Resources */,
+				B5016E631BDE64DA00A9A258 /* heartbeat_mono.wav in Resources */,
+				B5016E481BDE379200A9A258 /* drumkit_mono.wav in Resources */,
+				B5016E641BDE64DA00A9A258 /* one_two_three_testing.wav in Resources */,
 				B5DC8C2F1BD8CAE100397D95 /* Main.storyboard in Resources */,
+				B5016E561BDE3CF500A9A258 /* water-stream.wav in Resources */,
+				B5016E5C1BDE63D300A9A258 /* SurroundSoundScene.sks in Resources */,
+				B5016E5E1BDE641B00A9A258 /* BandScene.sks in Resources */,
+				B5016E551BDE3CF500A9A258 /* water-streamMono.wav in Resources */,
+				B5016E541BDE3CF500A9A258 /* Crackling_Fireplace.wav in Resources */,
+				B5016E661BDE64DA00A9A258 /* shia_mono.wav in Resources */,
+				B5016E471BDE379200A9A258 /* bass_mono.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,8 +365,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5DC8C2A1BD8CAE100397D95 /* GameScene.swift in Sources */,
+				B5016E6C1BDE875F00A9A258 /* GameScene.swift in Sources */,
+				B5016E6A1BDE6E3A00A9A258 /* AudibleCoachScene.swift in Sources */,
+				B5DC8C2A1BD8CAE100397D95 /* BandScene.swift in Sources */,
 				B5DC8C2C1BD8CAE100397D95 /* GameViewController.swift in Sources */,
+				B5016E5A1BDE3D9700A9A258 /* SurroundSoundScene.swift in Sources */,
 				B5DC8C261BD8CAE100397D95 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -272,6 +378,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5016E6D1BDE875F00A9A258 /* GameScene.swift in Sources */,
 				B5DC8C3F1BD8CAE100397D95 /* SoundDemoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,6 +387,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5016E6E1BDE875F00A9A258 /* GameScene.swift in Sources */,
 				B5DC8C4A1BD8CAE100397D95 /* SoundDemoUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -493,6 +601,7 @@
 				B5DC8C501BD8CAE100397D95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B5DC8C511BD8CAE100397D95 /* Build configuration list for PBXNativeTarget "SoundDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -501,6 +610,7 @@
 				B5DC8C531BD8CAE100397D95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B5DC8C541BD8CAE100397D95 /* Build configuration list for PBXNativeTarget "SoundDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -509,6 +619,7 @@
 				B5DC8C561BD8CAE100397D95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
