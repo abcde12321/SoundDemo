@@ -9,14 +9,14 @@
 import SpriteKit
 import AVFoundation
 
-class BandScene: SKScene {
+class BandScene: GameScene {
     var touchStarted: NSTimeInterval?
     let tapTime: NSTimeInterval = 0.2
     
-    let myAudioEngine:AVAudioEngine = AVAudioEngine()
+    //let myAudioEngine:AVAudioEngine = AVAudioEngine()
     
     var multichannelOutputEnabled = false
-    let enviromentNode:AVAudioEnvironmentNode! = AVAudioEnvironmentNode()
+    //let enviromentNode:AVAudioEnvironmentNode! = AVAudioEnvironmentNode()
     
     let bassPlayNode:AVAudioPlayerNode! = AVAudioPlayerNode()
     var bassSoundBuffer:AVAudioPCMBuffer!
@@ -31,7 +31,7 @@ class BandScene: SKScene {
     var saxSoundBuffer:AVAudioPCMBuffer!
     
     //scale of position point to meters
-    let scale:CGFloat = 0.015
+    //let scale:CGFloat = 0.015
     
     var bassPlaying:Bool = true
     var pianoPlaying:Bool = true
@@ -39,6 +39,7 @@ class BandScene: SKScene {
     var drumPlaying:Bool = true
     
     override func didMoveToView(view: SKView) {
+        super.didMoveToView(view)
         NSNotificationCenter.defaultCenter().addObserver(self,
             selector: "handleInterruption:",
             name: AVAudioEngineConfigurationChangeNotification,

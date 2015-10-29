@@ -14,6 +14,8 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "quitScene", name: "quitScene", object: nil)
+        
         let name = self.title
         loadGameScene(name!)
         
@@ -58,6 +60,10 @@ class GameViewController: UIViewController {
             scene!.size = self.view.frame.size
             skView.presentScene(scene)
         }
+    }
+    
+    func quitScene() {
+        self.navigationController?.popToRootViewControllerAnimated(true)
     }
 
     override func shouldAutorotate() -> Bool {

@@ -14,13 +14,13 @@ struct TouchInfo {
     var time:NSTimeInterval
 }
 
-class SurroundSoundScene: SKScene, SKPhysicsContactDelegate {
+class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
     var selectedNode:SKShapeNode?
     var history:[TouchInfo]?
     
     //var myAudioEngine:AVAudioEngine
-    let myAudioEngine = AVAudioEngine()
-    let enviromentNode:AVAudioEnvironmentNode! = AVAudioEnvironmentNode()
+    //let myAudioEngine = AVAudioEngine()
+    //let enviromentNode:AVAudioEnvironmentNode! = AVAudioEnvironmentNode()
     let collisionPlayerNode:AVAudioPlayerNode! = AVAudioPlayerNode()
     var collisionSoundBuffer:AVAudioPCMBuffer!
     //var collisionPlayerArray:NSMutableArray = []
@@ -35,11 +35,12 @@ class SurroundSoundScene: SKScene, SKPhysicsContactDelegate {
     
     
     //scale of position point to meters
-    let scale:CGFloat = 0.015
+    //let scale:CGFloat = 0.015
     
     var multichannelOutputEnabled = false
     
     override func didMoveToView(view: SKView) {
+        super.didMoveToView(view)
         addDebugText()
   
         NSNotificationCenter.defaultCenter().addObserver(self,

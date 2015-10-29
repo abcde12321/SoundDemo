@@ -9,9 +9,9 @@
 import SpriteKit
 import AVFoundation
 
-class AudibleCoachScene: SKScene {
-    let myAudioEngine = AVAudioEngine()
-    let enviromentNode:AVAudioEnvironmentNode! = AVAudioEnvironmentNode()
+class AudibleCoachScene: GameScene {
+    //let myAudioEngine = AVAudioEngine()
+    //let enviromentNode:AVAudioEnvironmentNode! = AVAudioEnvironmentNode()
     
     let coachPlayNode:AVAudioPlayerNode! = AVAudioPlayerNode()
     var coachSoundBuffer:AVAudioPCMBuffer!
@@ -28,7 +28,7 @@ class AudibleCoachScene: SKScene {
     //var waterSoundBuffer:AVAudioPCMBuffer!
     
     //scale of position point to meters
-    let scale:CGFloat = 0.0002
+    //let scale:CGFloat = 0.0002
     
     var multichannelOutputEnabled = false
     
@@ -38,6 +38,7 @@ class AudibleCoachScene: SKScene {
 
     
     override func didMoveToView(view: SKView) {
+        super.didMoveToView(view)
         addDebugText()
     
         let backgroundNode = SKSpriteNode.init(imageNamed: "running-track.jpg")
