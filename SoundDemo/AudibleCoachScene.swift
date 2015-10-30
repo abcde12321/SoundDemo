@@ -343,16 +343,7 @@ class AudibleCoachScene: GameScene {
         //coachPlayNode.stop()
     }
     
-    func tryStartAudioEngine(){
-        if(!myAudioEngine.running){
-            myAudioEngine.prepare()
-            do{
-                try myAudioEngine.start()
-            }catch let error as NSError {
-                print ("Error starting scene audio engine: \(error.domain)")
-            }
-        }
-    }
+
     
     func handleInterruption(notification:NSNotification){
         updateAudioSession()

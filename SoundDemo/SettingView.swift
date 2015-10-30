@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+//this class is not used
 class SettingView:UIView{
     /*class func instanceFromNib() -> UIView {
         return UINib(nibName: "SettingView", bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! UIView

@@ -95,22 +95,6 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         collisionPlayerNode.reverbBlend = 0.2
         collisionPlayerNode.volume = 1
         launchPlayerNode.volume = 0.35
-        
-        //let actionPlaySound = SKAction.play()
-        /* if let audioNodeRed:SKAudioNode = childNodeWithName("//audioNodeRed") as? SKAudioNode {
-            let actionPlaySound = SKAction.playSoundFileNamed("Crackling_Fireplace.wav", waitForCompletion: false)
-            audioNodeRed.positional = true
-            audioNodeRed.autoplayLooped = true
-           // audioNodeRed.runAction(actionPlaySound)
-        }else{
-            print("Error: audioNodeRed doesnot exist!")
-        }
-        let actionPlayWaterSound = SKAction.playSoundFileNamed("water-stream.wav", waitForCompletion: false)
-        //let actionPlaySound = SKAction.play()
-        let audioNodeBlue:SKAudioNode = childNodeWithName("//audioNodeBlue") as! SKAudioNode;
-        audioNodeBlue.positional = true
-        audioNodeBlue.autoplayLooped = true
-        audioNodeBlue.runAction(actionPlayWaterSound)*/
  
         myAudioEngine.attachNode(firePlayNode)
         myAudioEngine.attachNode(waterPlayNode)
@@ -145,8 +129,6 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
     }
     
     func makeEngineConnections(){
-
-   
         myAudioEngine.connect(firePlayNode, to: enviromentNode, format: fireSoundBuffer?.format)
         myAudioEngine.connect(waterPlayNode, to: enviromentNode, format: waterSoundBuffer?.format)
         myAudioEngine.connect(collisionPlayerNode, to: enviromentNode, format: collisionSoundBuffer?.format)
@@ -292,28 +274,28 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
                 history = [TouchInfo(location:location, time:touch.timestamp)]
             }
             
-            if(myAudioEngine.running){
-                if (node.name == "redNode"){
-                    /*if let audioNodeRed:SKAudioNode = childNodeWithName("//audioNodeRed") as? SKAudioNode {
-                        let actionPlay = SKAction.play()
-                        audioNodeRed.runAction(actionPlay)
-                    }*/
-                    firePlayNode.scheduleBuffer(fireSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
-                    //firePlayNode.scheduleBuffer(fireSoundBuffer!, completionHandler: nil)
-                    firePlayNode.position = AVAudioMake3DPoint(Float(node.position.x * scale),Float(0),Float(-node.position.y * scale))
-                    firePlayNode.play()
-                }else if(node.name == "blueNode"){
-                    /*if let audioNodeBlue:SKAudioNode = childNodeWithName("//audioNodeBlue") as? SKAudioNode {
-                        let actionPlay = SKAction.play()
-                        audioNodeBlue.runAction(actionPlay)
-                    }*/
-                    waterPlayNode.scheduleBuffer(waterSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
-                    //waterPlayNode.scheduleBuffer(waterSoundBuffer!, completionHandler: nil)
-                    waterPlayNode.position = AVAudioMake3DPoint(Float(node.position.x * scale),Float(0),Float(-node.position.y * scale))
-                    waterPlayNode.play()
-                }
-                
+            tryStartAudioEngine()
+            if (node.name == "redNode"){
+                /*if let audioNodeRed:SKAudioNode = childNodeWithName("//audioNodeRed") as? SKAudioNode {
+                    let actionPlay = SKAction.play()
+                    audioNodeRed.runAction(actionPlay)
+                }*/
+                firePlayNode.scheduleBuffer(fireSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
+                //firePlayNode.scheduleBuffer(fireSoundBuffer!, completionHandler: nil)
+                firePlayNode.position = AVAudioMake3DPoint(Float(node.position.x * scale),Float(0),Float(-node.position.y * scale))
+                firePlayNode.play()
+            }else if(node.name == "blueNode"){
+                /*if let audioNodeBlue:SKAudioNode = childNodeWithName("//audioNodeBlue") as? SKAudioNode {
+                    let actionPlay = SKAction.play()
+                    audioNodeBlue.runAction(actionPlay)
+                }*/
+                waterPlayNode.scheduleBuffer(waterSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
+                //waterPlayNode.scheduleBuffer(waterSoundBuffer!, completionHandler: nil)
+                waterPlayNode.position = AVAudioMake3DPoint(Float(node.position.x * scale),Float(0),Float(-node.position.y * scale))
+                waterPlayNode.play()
             }
+                
+            
         }
     }
     
@@ -418,12 +400,13 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
             }else if session == .Ended{
                 print("handleSessionChanged::audio session interrupt ended")
                 makeEngineConnections()
-                myAudioEngine.prepare()
+                tryStartAudioEngine()
+                /*myAudioEngine.prepare()
                 do{
                     try myAudioEngine.start()
                 }catch let error as NSError {
                     print ("Error starting scene audio engine: \(error.domain)")
-                }
+                }*/
             }
         }   
         /*switch sessionChange {
@@ -579,6 +562,8 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
                 debugImpactNode.text = "Impact:\(NSInteger(impulse)) volumn:\(collisionPlayerNode.volume) rate:\(collisionPlayerNode.rate)"
                 print("Impact:\(NSInteger(impulse)) volumn:\(collisionPlayerNode.volume) rate:\(collisionPlayerNode.rate)")
             }
+        }else{
+            tryStartAudioEngine()
         }
     }
     
@@ -586,6 +571,8 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         if(myAudioEngine.running){
             launchPlayerNode.scheduleBuffer(launchSoundBuffer!, completionHandler: nil)
             launchPlayerNode.play()
+        }else{
+            tryStartAudioEngine()
         }
     }
     

@@ -325,6 +325,11 @@ class BandScene: GameScene {
         /* Called before each frame is rendered */
     }
     
+    override func continueDemo() {
+        super.continueDemo()
+        tryStartAudioEngine()
+    }
+    
     
     func handleInterruption(notification:NSNotification){
         updateAudioSession()
@@ -345,12 +350,7 @@ class BandScene: GameScene {
             }else if session == .Ended{
                 print("handleSessionChanged::audio session interrupt ended")
                 makeEngineConnections()
-                myAudioEngine.prepare()
-                do{
-                    try myAudioEngine.start()
-                }catch let error as NSError {
-                    print ("Error starting scene audio engine: \(error.domain)")
-                }
+                tryStartAudioEngine()
                 playAllNode()
             }
         }
