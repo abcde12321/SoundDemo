@@ -63,6 +63,9 @@
 
 /* Begin PBXFileReference section */
 		31FDF69E255C1CCD002690C5 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		31FDF6A2255C2352002690C5 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
+		31FDF6A3255C237C002690C5 /* demo1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = demo1.png; sourceTree = "<group>"; };
+		31FDF6A4255C23A3002690C5 /* demo2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = demo2.png; sourceTree = "<group>"; };
 		B5016E431BDE379200A9A258 /* bass_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bass_mono.wav; sourceTree = "<group>"; };
 		B5016E441BDE379200A9A258 /* drumkit_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = drumkit_mono.wav; sourceTree = "<group>"; };
 		B5016E451BDE379200A9A258 /* piano_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = piano_mono.wav; sourceTree = "<group>"; };
@@ -170,6 +173,10 @@
 		B5DC8C191BD8CAE100397D95 = {
 			isa = PBXGroup;
 			children = (
+				31FDF6A2255C2352002690C5 /* menu.png */,
+				31FDF6A3255C237C002690C5 /* demo1.png */,
+				31FDF6A4255C23A3002690C5 /* demo2.png */,
+				31FDF69E255C1CCD002690C5 /* README.md */,
 				B5DC8C241BD8CAE100397D95 /* SoundDemo */,
 				B5DC8C3D1BD8CAE100397D95 /* SoundDemoTests */,
 				B5DC8C481BD8CAE100397D95 /* SoundDemoUITests */,
@@ -204,7 +211,6 @@
 				B5016E6B1BDE875F00A9A258 /* GameScene.swift */,
 				B5016E6F1BDFC7AC00A9A258 /* SettingView.xib */,
 				B5B662761BE102F10088F310 /* SettingView.swift */,
-				31FDF69E255C1CCD002690C5 /* README.md */,
 			);
 			path = SoundDemo;
 			sourceTree = "<group>";
