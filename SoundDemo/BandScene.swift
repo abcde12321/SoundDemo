@@ -10,8 +10,8 @@ import SpriteKit
 import AVFoundation
 
 class BandScene: GameScene {
-    var touchStarted: NSTimeInterval?
-    let tapTime: NSTimeInterval = 0.2
+    var touchStarted: TimeInterval?
+    let tapTime: TimeInterval = 0.2
     
     //let myAudioEngine:AVAudioEngine = AVAudioEngine()
     
@@ -38,22 +38,22 @@ class BandScene: GameScene {
     var saxPlaying:Bool = true
     var drumPlaying:Bool = true
     
-    override func didMoveToView(view: SKView) {
-        super.didMoveToView(view)
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "handleInterruption:",
-            name: AVAudioEngineConfigurationChangeNotification,
+    override func didMove(to view: SKView) {
+        super.didMove(to: view)
+        NotificationCenter.default.addObserver(self,
+                                               selector: Selector(("handleInterruption:")),
+                                                     name: NSNotification.Name.AVAudioEngineConfigurationChange,
             object: nil)
         //for session change
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "handleSessionChange:",
-            name: AVAudioSessionInterruptionNotification,
+        NotificationCenter.default.addObserver(self,
+                                               selector: Selector(("handleSessionChange:")),
+                                                     name: AVAudioSession.interruptionNotification,
             object: AVAudioSession.sharedInstance())
         
         //this does not get called
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "handleRouteChange:",
-            name: AVAudioSessionRouteChangeNotification,
+        NotificationCenter.default.addObserver(self,
+                                               selector: Selector(("handleRouteChange:")),
+            name: AVAudioSession.routeChangeNotification,
             object: AVAudioSession.sharedInstance())
         
         let sprite = SKSpriteNode(imageNamed:"listener")
@@ -61,7 +61,7 @@ class BandScene: GameScene {
         sprite.yScale = 1.0
         sprite.zPosition = CGFloat(2)
         sprite.name = "listener"
-        sprite.position = CGPointMake(CGRectGetMidX(self.frame),CGRectGetMidY(self.frame))
+        sprite.position = CGPoint(x:self.frame.midX,y:self.frame.midY)
         self.addChild(sprite)
         self.listener = sprite
         
@@ -69,7 +69,7 @@ class BandScene: GameScene {
         self.addChild(audioNode)
         
         enviromentNode.reverbParameters.enable = true
-        enviromentNode.reverbParameters.loadFactoryReverbPreset(.LargeRoom)
+        enviromentNode.reverbParameters.loadFactoryReverbPreset(.largeRoom)
         enviromentNode.reverbParameters.level = -20
         enviromentNode.volume = 1
         enviromentNode.position = AVAudioMake3DPoint(Float(0),Float(0),Float(0))
@@ -77,16 +77,16 @@ class BandScene: GameScene {
         let point:AVAudio3DPoint = AVAudioMake3DPoint(Float(sprite.position.x * scale),Float(0),Float(-sprite.position.y * scale))
         enviromentNode.listenerPosition = point
         
-        drumSoundBuffer = loadSoundIntoBuffer("drumkit_mono",type: "wav")
-        pianoSoundBuffer = loadSoundIntoBuffer("piano_mono",type: "wav")
-        bassSoundBuffer = loadSoundIntoBuffer("bass_mono",type: "wav")
-        saxSoundBuffer = loadSoundIntoBuffer("sax_mono",type: "wav")
+        drumSoundBuffer = loadSoundIntoBuffer(filename: "drumkit_mono",type: "wav")
+        pianoSoundBuffer = loadSoundIntoBuffer(filename: "piano_mono",type: "wav")
+        bassSoundBuffer = loadSoundIntoBuffer(filename: "bass_mono",type: "wav")
+        saxSoundBuffer = loadSoundIntoBuffer(filename: "sax_mono",type: "wav")
         
-        myAudioEngine.attachNode(enviromentNode)
-        myAudioEngine.attachNode(saxPlayNode)
-        myAudioEngine.attachNode(pianoPlayNode)
-        myAudioEngine.attachNode(bassPlayNode)
-        myAudioEngine.attachNode(drumPlayNode)
+        myAudioEngine.attach(enviromentNode)
+        myAudioEngine.attach(saxPlayNode)
+        myAudioEngine.attach(pianoPlayNode)
+        myAudioEngine.attach(bassPlayNode)
+        myAudioEngine.attach(drumPlayNode)
         
         updateAudioSession()
         makeEngineConnections()
@@ -94,38 +94,38 @@ class BandScene: GameScene {
         playAllNode()
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.locationInNode(self)
-            let touchNode = self.nodeAtPoint(location)
-            if(touchNode.isKindOfClass(SKSpriteNode) && touchNode.name != "listener"){
+            let location = touch.location(in: self)
+            let touchNode = self.atPoint(location)
+            if(touchNode is SKSpriteNode && touchNode.name != "listener"){
                 touchStarted = touch.timestamp
             }
         }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.locationInNode(self)
-            let touchNode = self.nodeAtPoint(location)
-            if(touchNode.isKindOfClass(SKSpriteNode) && touchNode.name != "listener" && touchStarted != nil){
+            let location = touch.location(in: self)
+            let touchNode = self.atPoint(location)
+            if(touchNode is SKSpriteNode && touchNode.name != "listener" && touchStarted != nil){
                 let timeEnded = touch.timestamp
                 if timeEnded - touchStarted! <= tapTime {
                     if(touchNode.name == "bass"){
                         let node = touchNode as! SKSpriteNode
-                        touchOnNode(node, audioNode: bassPlayNode, isPlaying: bassPlaying)
+                        touchOnNode(node: node, audioNode: bassPlayNode, isPlaying: bassPlaying)
                         bassPlaying = !bassPlaying
                     }else if(touchNode.name == "piano"){
                         let node = touchNode as! SKSpriteNode
-                        touchOnNode(node, audioNode: pianoPlayNode, isPlaying: pianoPlaying)
+                        touchOnNode(node: node, audioNode: pianoPlayNode, isPlaying: pianoPlaying)
                         pianoPlaying = !pianoPlaying
                     }else if(touchNode.name == "drum"){
                         let node = touchNode as! SKSpriteNode
-                        touchOnNode(node, audioNode: drumPlayNode, isPlaying: drumPlaying)
+                        touchOnNode(node: node, audioNode: drumPlayNode, isPlaying: drumPlaying)
                         drumPlaying = !drumPlaying
                     }else if(touchNode.name == "sax"){
                         let node = touchNode as! SKSpriteNode
-                        touchOnNode(node, audioNode: saxPlayNode, isPlaying: saxPlaying)
+                        touchOnNode(node: node, audioNode: saxPlayNode, isPlaying: saxPlaying)
                         saxPlaying = !saxPlaying
                     }
                 }
@@ -145,17 +145,17 @@ class BandScene: GameScene {
         }
     }
     
-    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+    override func touchesCancelled(_ touches: Set<UITouch>?, with event: UIEvent?) {
         touchStarted = nil
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.locationInNode(self)
-            let touchNode = self.nodeAtPoint(location)
+            let location = touch.location(in: self)
+            let touchNode = self.atPoint(location)
             
             //dont move the listener
-            if(touchNode.isKindOfClass(SKSpriteNode) && touchNode.name != "listener"){
+            if(touchNode is SKSpriteNode && touchNode.name != "listener"){
                 touchNode.position = location
                 if(touchNode.name == "bass"){
                     bassPlayNode.position = AVAudioMake3DPoint(Float(touchNode.position.x * scale),Float(0),Float(-touchNode.position.y * scale))
@@ -166,7 +166,7 @@ class BandScene: GameScene {
                 }else if(touchNode.name == "sax"){
                     saxPlayNode.position = AVAudioMake3DPoint(Float(touchNode.position.x * scale),Float(0),Float(-touchNode.position.y * scale))
                 }
-            }else if(touchNode.isKindOfClass(SKShapeNode)){
+            }else if(touchNode is SKShapeNode){
                 //touchNode.position = location
                 //let velocity = touch.v
             }
@@ -174,11 +174,11 @@ class BandScene: GameScene {
     }
     
     func loadSoundIntoBuffer(filename:String, type:String) -> AVAudioPCMBuffer?{
-        let soundFileURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource(filename, ofType: type)!)
+        let soundFileURL = NSURL(fileURLWithPath: Bundle.main.path(forResource: filename, ofType: type)!)
         do{
-            let soundFile = try AVAudioFile(forReading: soundFileURL, commonFormat: .PCMFormatFloat32, interleaved: false)
-            let outputBuffer = AVAudioPCMBuffer(PCMFormat: soundFile.processingFormat, frameCapacity:UInt32(soundFile.length))
-            try soundFile.readIntoBuffer(outputBuffer)
+            let soundFile = try AVAudioFile(forReading: soundFileURL as URL, commonFormat: .pcmFormatFloat32, interleaved: false)
+            let outputBuffer = AVAudioPCMBuffer(pcmFormat: soundFile.processingFormat, frameCapacity:UInt32(soundFile.length))
+            try soundFile.read(into: outputBuffer!)
             return outputBuffer
         }catch let error as NSError {
             print ("Error loadSoundIntoBuffer: \(error.domain)")
@@ -187,13 +187,13 @@ class BandScene: GameScene {
     }
     
     func loadSoundIntoBuffer(filename:String) -> AVAudioPCMBuffer?{
-        return loadSoundIntoBuffer(filename,type: "caf")
+        return loadSoundIntoBuffer(filename: filename,type: "caf")
     }
     
     func updateAudioSession(){
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            let category = AVAudioSessionCategoryPlayback
+            let category = AVAudioSession.Category.playback
             //let category = AVAudioSessionCategoryMultiRoute
             //let category = AVAudioSessionCategoryAmbient
             try audioSession.setCategory(category)
@@ -210,7 +210,7 @@ class BandScene: GameScene {
             //let actualChannelCount = audioSession.outputNumberOfChannels
             // adapt to the actual number of output channels
         } catch let error as NSError{
-            if let debugImpactNode:SKLabelNode = childNodeWithName("//debugImpactText") as? SKLabelNode{
+            if let debugImpactNode:SKLabelNode = childNode(withName: "//debugImpactText") as? SKLabelNode{
                 debugImpactNode.text = "Error session: \(error.domain)"
             }
             print("Error setting avAudioSession")
@@ -220,7 +220,7 @@ class BandScene: GameScene {
         let MaxNumChannels = AVAudioSession.sharedInstance().maximumOutputNumberOfChannels
         
         //if there are more than 2 channels, use sound field
-        let algorithm:AVAudio3DMixingRenderingAlgorithm = (numChannels <= 2) ? .HRTF : .SoundField
+        let algorithm:AVAudio3DMixingRenderingAlgorithm = (numChannels <= 2) ? .HRTF : .soundField
         
         //audioEngine.mainMixerNode.renderingAlgorithm = algorithm
         saxPlayNode.renderingAlgorithm = algorithm
@@ -230,7 +230,7 @@ class BandScene: GameScene {
         
         print("Set rendering algorithm: \(algorithm)")
         
-        if let debugAudioNode:SKLabelNode = childNodeWithName("//debugAudioText") as? SKLabelNode{
+        if let debugAudioNode:SKLabelNode = childNode(withName: "//debugAudioText") as? SKLabelNode{
             //debugAudioNode.text = "type:\(AVAudioSession.sharedInstance().currentRoute.outputs)"
             //usally number of avilable outputs count is 1
             let availableOuput = AVAudioSession.sharedInstance().currentRoute.outputs.count
@@ -258,8 +258,8 @@ class BandScene: GameScene {
     
     func constructOutputConnectionFormatForEnvironment() -> AVAudioFormat{
         var environmentOutputConnectionFormat:AVAudioFormat?;
-        var numHardwareOutputChannels:AVAudioChannelCount = myAudioEngine.outputNode.outputFormatForBus(0).channelCount
-        let hardwareSampleRate = myAudioEngine.outputNode.outputFormatForBus(0).sampleRate
+        var numHardwareOutputChannels:AVAudioChannelCount = myAudioEngine.outputNode.outputFormat(forBus: 0).channelCount
+        let hardwareSampleRate = myAudioEngine.outputNode.outputFormat(forBus: 0).sampleRate
         
         // if we're connected to multichannel hardware, create a compatible multichannel format for the environment node
         if (numHardwareOutputChannels > 2 && numHardwareOutputChannels != 3) {
@@ -286,7 +286,7 @@ class BandScene: GameScene {
             }
             
             // using that layout tag, now construct a format
-            let environmentOutputChannelLayout:AVAudioChannelLayout = AVAudioChannelLayout(layoutTag: environmentOutputLayoutTag)
+            let environmentOutputChannelLayout:AVAudioChannelLayout = AVAudioChannelLayout(layoutTag: environmentOutputLayoutTag)!
             environmentOutputConnectionFormat = AVAudioFormat(standardFormatWithSampleRate: hardwareSampleRate, channelLayout: environmentOutputChannelLayout)
             print("constructOutputConnectionFormatForEnvironment::multichannelOutputEnabled")
             multichannelOutputEnabled = true
@@ -302,18 +302,18 @@ class BandScene: GameScene {
             print("constructOutputConnectionFormatForEnvironment::multichannelOutputEnabled not")
         }
         
-        print("OutputFormat.channelCount:\(environmentOutputConnectionFormat?.channelCount)/\(numHardwareOutputChannels) \(environmentOutputConnectionFormat)")
-        if let debugImpactNode:SKLabelNode = childNodeWithName("//debugImpactText") as? SKLabelNode{
-            debugImpactNode.text = "\(environmentOutputConnectionFormat)"
+        print("OutputFormat.channelCount:\(String(describing: environmentOutputConnectionFormat?.channelCount))/\(numHardwareOutputChannels) \(String(describing: environmentOutputConnectionFormat))")
+        if let debugImpactNode:SKLabelNode = childNode(withName: "//debugImpactText") as? SKLabelNode{
+            debugImpactNode.text = "\(String(describing: environmentOutputConnectionFormat))"
         }
         return environmentOutputConnectionFormat!;
     }
     
     func playAllNode(){
-        saxPlayNode.scheduleBuffer(saxSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
-        pianoPlayNode.scheduleBuffer(pianoSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
-        drumPlayNode.scheduleBuffer(drumSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
-        bassPlayNode.scheduleBuffer(bassSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
+        saxPlayNode.scheduleBuffer(saxSoundBuffer,at:nil,options:.loops,completionHandler:nil)
+        pianoPlayNode.scheduleBuffer(pianoSoundBuffer,at:nil,options:.loops,completionHandler:nil)
+        drumPlayNode.scheduleBuffer(drumSoundBuffer,at:nil,options:.loops,completionHandler:nil)
+        bassPlayNode.scheduleBuffer(bassSoundBuffer,at:nil,options:.loops,completionHandler:nil)
         
         saxPlayNode.play()
         pianoPlayNode.play()
@@ -321,7 +321,7 @@ class BandScene: GameScene {
         bassPlayNode.play()
     }
     
-    override func update(currentTime: CFTimeInterval) {
+    override func update(_ currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
     
@@ -339,15 +339,15 @@ class BandScene: GameScene {
     
     func handleSessionChange(notification:NSNotification){
         let sessionChangeTypeAsObject = notification.userInfo![AVAudioSessionInterruptionTypeKey] as! UInt
-        let sessionChange = AVAudioSessionInterruptionType(rawValue: sessionChangeTypeAsObject)
+        let sessionChange = AVAudioSession.InterruptionType(rawValue: sessionChangeTypeAsObject)
         
         if let session = sessionChange{
-            if session == .Began{
+            if session == .began{
                 print("handleSessionChanged::audio session interrupt began")
-                if(myAudioEngine.running){
+                if(myAudioEngine.isRunning){
                     myAudioEngine.pause()
                 }
-            }else if session == .Ended{
+            }else if session == .ended{
                 print("handleSessionChanged::audio session interrupt ended")
                 makeEngineConnections()
                 tryStartAudioEngine()
@@ -358,24 +358,24 @@ class BandScene: GameScene {
     
     func handleRouteChange(notification:NSNotification){
         let routeChangeTypeAsObject = notification.userInfo![AVAudioSessionRouteChangeReasonKey] as! NSNumber
-        let routeChange = AVAudioSessionRouteChangeReason(rawValue:routeChangeTypeAsObject.unsignedLongValue)
+        let routeChange = AVAudioSession.RouteChangeReason(rawValue:routeChangeTypeAsObject.uintValue)
         
         if let route = routeChange{
-            if route == .Unknown{
+            if route == .unknown{
                 print("handleRouteChange:Unknown ")
-            }else if route == .NewDeviceAvailable{
+            }else if route == .newDeviceAvailable{
                 print("handleRouteChange:NewDeviceAvailable a headset was added or removed")
-            }else if route == .OldDeviceUnavailable{
+            }else if route == .oldDeviceUnavailable{
                 print("handleRouteChange:OldDeviceUnavailable a headset was added or removed")
-            }else if route == .CategoryChange{
+            }else if route == .categoryChange{
                 print("handleRouteChange:CategoryChange called at start - also when other audio wants to play")
-            }else if route == .Override{
+            }else if route == .override{
                 print("handleRouteChange:Override")
-            }else if route == .WakeFromSleep{
+            }else if route == .wakeFromSleep{
                 print("handleRouteChange:WakeFromSleep")
-            }else if route == .NoSuitableRouteForCategory{
+            }else if route == .noSuitableRouteForCategory{
                 print("handleRouteChange:NoSuitableRouteForCategory")
-            }else if route == .RouteConfigurationChange{
+            }else if route == .routeConfigurationChange{
                 print("handleRouteChange:RouteConfigurationChange")
             }
         }

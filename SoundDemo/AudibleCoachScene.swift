@@ -37,35 +37,35 @@ class AudibleCoachScene: GameScene {
     var isMicrophoneEnabled = false
 
     
-    override func didMoveToView(view: SKView) {
-        super.didMoveToView(view)
+    override func didMove(to view: SKView) {
+        super.didMove(to: view)
         addDebugText()
     
         let backgroundNode = SKSpriteNode.init(imageNamed: "running-track.jpg")
-        backgroundNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
+        backgroundNode.position = CGPoint(x:self.frame.midX, y:self.frame.midY)
         backgroundNode.name = "background"
         backgroundNode.zPosition = -10
         backgroundNode.alpha = 0.1
         self.addChild(backgroundNode)
         
         
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "handleInterruption:",
-            name: AVAudioEngineConfigurationChangeNotification,
+        NotificationCenter.default.addObserver(self,
+                                               selector: Selector(("handleInterruption:")),
+            name: NSNotification.Name.AVAudioEngineConfigurationChange,
             object: nil)
         //for session change
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "handleSessionChange:",
-            name: AVAudioSessionInterruptionNotification,
+        NotificationCenter.default.addObserver(self,
+                                               selector: Selector(("handleSessionChange:")),
+            name: AVAudioSession.interruptionNotification,
             object: AVAudioSession.sharedInstance())
         
         //this does not get called
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "handleRouteChange:",
-            name: AVAudioSessionRouteChangeNotification,
+        NotificationCenter.default.addObserver(self,
+                                               selector: Selector(("handleRouteChange:")),
+            name: AVAudioSession.routeChangeNotification,
             object: AVAudioSession.sharedInstance())
         
-        let physicsBody = SKPhysicsBody (edgeLoopFromRect: self.frame)
+        let physicsBody = SKPhysicsBody (edgeLoopFrom: self.frame)
         self.physicsBody = physicsBody
         self.physicsBody?.friction = 0.4
         self.physicsBody?.collisionBitMask = 1
@@ -78,11 +78,11 @@ class AudibleCoachScene: GameScene {
         sprite.yScale = 1.0
         sprite.zPosition = CGFloat(2)
         sprite.name = "listener"
-        sprite.position = CGPointMake(CGRectGetMidX(self.frame),CGRectGetMidY(self.frame))
+        sprite.position = CGPoint(x:self.frame.midX, y:self.frame.midY)
         self.addChild(sprite)
 
         enviromentNode.reverbParameters.enable = true
-        enviromentNode.reverbParameters.loadFactoryReverbPreset(.SmallRoom)
+        enviromentNode.reverbParameters.loadFactoryReverbPreset(.smallRoom)
         enviromentNode.reverbParameters.level = 0
         enviromentNode.volume = 1
         enviromentNode.outputVolume = 1.0
@@ -93,12 +93,12 @@ class AudibleCoachScene: GameScene {
         //defalut orientation is face forward, point up
         //enviromentNode.listenerVectorOrientation = AVAudio3DVectorOrientation(forward: AVAudio3DVector(x: 0,y: 0,z: -1), up:AVAudio3DVector(x: 0,y: 1,z: 0))
         
-        coachSoundBuffer = loadSoundIntoBuffer("shia_mono",type: "wav")
-        heartRateSoundBuffer = loadSoundIntoBuffer("heartbeat_mono",type:"wav")
+        coachSoundBuffer = loadSoundIntoBuffer(filename: "shia_mono",type: "wav")
+        heartRateSoundBuffer = loadSoundIntoBuffer(filename: "heartbeat_mono",type:"wav")
         
         let filterParams = microphoneEQNode.bands[0] as AVAudioUnitEQFilterParameters
         
-        filterParams.filterType = .HighPass
+        filterParams.filterType = .highPass
         
         // 20hz to nyquist
         filterParams.frequency = 50.0
@@ -113,12 +113,12 @@ class AudibleCoachScene: GameScene {
 
         microphoneEQNode.globalGain = 24
         
-        myAudioEngine.attachNode(microphoneEQNode)
-        myAudioEngine.attachNode(coachPlayNode)
-        myAudioEngine.attachNode(heartRatePlayNode)
-        myAudioEngine.attachNode(heartRateTimePitch)
-        myAudioEngine.attachNode(heartRateDistortion)
-        myAudioEngine.attachNode(enviromentNode)
+        myAudioEngine.attach(microphoneEQNode)
+        myAudioEngine.attach(coachPlayNode)
+        myAudioEngine.attach(heartRatePlayNode)
+        myAudioEngine.attach(heartRateTimePitch)
+        myAudioEngine.attach(heartRateDistortion)
+        myAudioEngine.attach(enviromentNode)
         
         updateAudioSession()
         makeEngineConnections()
@@ -127,15 +127,15 @@ class AudibleCoachScene: GameScene {
     }
     
     func setMicroPhoneEnabled(enable: Bool){
-        let format = myAudioEngine.inputNode!.inputFormatForBus(0)
+        let format = myAudioEngine.inputNode.inputFormat(forBus: 0)
         if(enable){
             isMicrophoneEnabled = true
-            childNodeWithName("microphone")?.alpha = 1.0
-            myAudioEngine.connect(myAudioEngine.inputNode!, to: microphoneEQNode, format: format)
+            childNode(withName: "microphone")?.alpha = 1.0
+            myAudioEngine.connect(myAudioEngine.inputNode, to: microphoneEQNode, format: format)
         }else{
             isMicrophoneEnabled = false
-            childNodeWithName("microphone")?.alpha = 0.2
-            myAudioEngine.disconnectNodeOutput(myAudioEngine.inputNode!)
+            childNode(withName: "microphone")?.alpha = 0.2
+            myAudioEngine.disconnectNodeOutput(myAudioEngine.inputNode)
         }
     }
     
@@ -143,17 +143,17 @@ class AudibleCoachScene: GameScene {
         let synthesizer = AVSpeechSynthesizer()
         let utterance = AVSpeechUtterance(string:sth)
         utterance.rate = rate
-        synthesizer.speakUtterance(utterance)
+        synthesizer.speak(utterance)
     }
    
     func loadSoundIntoBuffer(filename:String, type:String) -> AVAudioPCMBuffer?{
-        let soundFileURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource(filename, ofType: type)!)
+        let soundFileURL = NSURL(fileURLWithPath: Bundle.main.path(forResource: filename, ofType: type)!)
         do{
-            let soundFile = try AVAudioFile(forReading: soundFileURL, commonFormat: .PCMFormatFloat32, interleaved: false)
+            let soundFile = try AVAudioFile(forReading: soundFileURL as URL, commonFormat: .pcmFormatFloat32, interleaved: false)
             
-            let outputBuffer = AVAudioPCMBuffer(PCMFormat: soundFile.processingFormat, frameCapacity:UInt32(soundFile.length))
+            let outputBuffer = AVAudioPCMBuffer(pcmFormat: soundFile.processingFormat, frameCapacity:UInt32(soundFile.length))
             
-            try soundFile.readIntoBuffer(outputBuffer)
+            try soundFile.read(into: outputBuffer!)
             return outputBuffer
         }catch let error as NSError {
             print ("Error loadSoundIntoBuffer: \(error.domain)")
@@ -162,7 +162,7 @@ class AudibleCoachScene: GameScene {
     }
     
     func loadSoundIntoBuffer(filename:String) -> AVAudioPCMBuffer?{
-        return loadSoundIntoBuffer(filename,type: "caf")
+        return loadSoundIntoBuffer(filename: filename,type: "caf")
     }
     
     func makeEngineConnections(){
@@ -171,7 +171,7 @@ class AudibleCoachScene: GameScene {
         coachPlayNode.reverbBlend = 1.0
         coachPlayNode.volume = 1.0
         
-        let format = myAudioEngine.inputNode!.inputFormatForBus(0)
+        let format = myAudioEngine.inputNode.inputFormat(forBus: 0)
         myAudioEngine.connect(microphoneEQNode, to: myAudioEngine.mainMixerNode, format: format)
         myAudioEngine.connect(coachPlayNode, to: enviromentNode, format: coachSoundBuffer?.format)
         myAudioEngine.connect(heartRatePlayNode, to: heartRateTimePitch, format: heartRateSoundBuffer?.format)
@@ -191,17 +191,17 @@ class AudibleCoachScene: GameScene {
     func updateAudioSession(){
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            let category = AVAudioSessionCategoryPlayAndRecord
+            let category = AVAudioSession.Category.playAndRecord
             //let category = AVAudioSessionCategoryMultiRoute
             //let category = AVAudioSessionCategoryAmbient
-            try audioSession.setCategory(category, withOptions:.DuckOthers)
+            try audioSession.setCategory(category, options:.duckOthers)
             try audioSession.setActive(true)
             
             //setting inputs !! crashing the compiler at the moment
             var builtInMicPort:AVAudioSessionPortDescription = AVAudioSessionPortDescription();
             let inputs = audioSession.availableInputs
             for port:AVAudioSessionPortDescription in inputs!{
-                if(port.portType == AVAudioSessionPortBuiltInMic){
+                if(port.portType == AVAudioSession.Port.builtInMic){
                     builtInMicPort = port;
                     break
                 }
@@ -209,7 +209,7 @@ class AudibleCoachScene: GameScene {
             
             for source:AVAudioSessionDataSourceDescription? in builtInMicPort.dataSources!{
                 //if(source!.orientation == AVAudioSessionOrientationFront){
-                if(source!.orientation == AVAudioSessionOrientationBack){
+                if(source!.orientation == AVAudioSession.Orientation.back){
                     try builtInMicPort.setPreferredDataSource(source)
                     break
                 }
@@ -229,7 +229,7 @@ class AudibleCoachScene: GameScene {
             //let actualChannelCount = audioSession.outputNumberOfChannels
             // adapt to the actual number of output channels
         } catch let error as NSError{
-            if let debugImpactNode:SKLabelNode = childNodeWithName("//debugImpactText") as? SKLabelNode{
+            if let debugImpactNode:SKLabelNode = childNode(withName: "//debugImpactText") as? SKLabelNode{
                 debugImpactNode.text = "Error session: \(error.domain)"
             }
             print("Error setting avAudioSession")
@@ -239,7 +239,7 @@ class AudibleCoachScene: GameScene {
         let MaxNumChannels = AVAudioSession.sharedInstance().maximumOutputNumberOfChannels
         
         //if there are more than 2 channels, use sound field
-        let algorithm:AVAudio3DMixingRenderingAlgorithm = (numChannels <= 2) ? .HRTF : .SoundField
+        let algorithm:AVAudio3DMixingRenderingAlgorithm = (numChannels <= 2) ? .HRTF : .soundField
         
         //myAudioEngine.mainMixerNode.renderingAlgorithm = algorithm
         coachPlayNode.renderingAlgorithm = algorithm
@@ -248,7 +248,7 @@ class AudibleCoachScene: GameScene {
         print("Set rendering algorithm: \(algorithm)")
         
         //print out
-        if let debugAudioNode:SKLabelNode = childNodeWithName("//debugAudioText") as? SKLabelNode{
+        if let debugAudioNode:SKLabelNode = childNode(withName: "//debugAudioText") as? SKLabelNode{
             //debugAudioNode.text = "type:\(AVAudioSession.sharedInstance().currentRoute.outputs)"
             //usally number of avilable outputs count is 1
             let availableOuput = AVAudioSession.sharedInstance().currentRoute.outputs.count
@@ -259,8 +259,8 @@ class AudibleCoachScene: GameScene {
         }
     }
     
-    override func didChangeSize(oldSize: CGSize) {
-        let physicsBody = SKPhysicsBody (edgeLoopFromRect: self.frame)
+    override func didChangeSize(_ oldSize: CGSize) {
+        let physicsBody = SKPhysicsBody (edgeLoopFrom: self.frame)
         self.physicsBody = physicsBody
     }
     
@@ -281,24 +281,24 @@ class AudibleCoachScene: GameScene {
         }else{
             heartRatePlayNode.volume = 0.5
         }
-        if let heartRateLabel = childNodeWithName("heartrateLabel") as? SKLabelNode{
+        if let heartRateLabel = childNode(withName: "heartrateLabel") as? SKLabelNode{
             heartRateLabel.text = "\(heartRate)bpm"
         }
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.locationInNode(self)
-            let node = self.nodeAtPoint(location)
+            let location = touch.location(in: self)
+            let node = self.atPoint(location)
             
             if(node.name == "plus"){
-                increaseHeartRateBy(10)
+                increaseHeartRateBy(value: 10)
             }else if (node.name == "minus"){
-                increaseHeartRateBy(-10)
+                increaseHeartRateBy(value: -10)
             }
             
             if(node.name == "microphone"){
-                setMicroPhoneEnabled(!isMicrophoneEnabled)
+                setMicroPhoneEnabled(enable: !isMicrophoneEnabled)
             }
             
             tryStartAudioEngine()
@@ -313,20 +313,20 @@ class AudibleCoachScene: GameScene {
                 heartRatePlayNode.volume = 1.0
                 heartRatePlayNode.play()
             }else if (node.name=="supportfemale"){
-                saySomething("Your heart rate is \(heartRate) beats per minute", rate: 0.5)
+                saySomething(sth: "Your heart rate is \(heartRate) beats per minute", rate: 0.5)
             }
             
         }
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.locationInNode(self)
+            let location = touch.location(in: self)
             
-            let touchNode = self.nodeAtPoint(location)
+            let touchNode = self.atPoint(location)
             
             //dont move the buttons etc...
-            if(touchNode.isKindOfClass(SKSpriteNode) && touchNode.name != "background" && touchNode.name != "heart" && touchNode.name != "minus" && touchNode.name != "plus" && touchNode.name != "supportfemale" && touchNode.name != "microphone"){
+            if(touchNode is SKSpriteNode && touchNode.name != "background" && touchNode.name != "heart" && touchNode.name != "minus" && touchNode.name != "plus" && touchNode.name != "supportfemale" && touchNode.name != "microphone"){
                 touchNode.position = location
                 if(touchNode.name == "coachNode"){
                     coachPlayNode.position = AVAudioMake3DPoint(Float(touchNode.position.x * scale),Float(1.7),Float(-touchNode.position.y * scale))
@@ -339,7 +339,7 @@ class AudibleCoachScene: GameScene {
     }
     
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         //coachPlayNode.stop()
     }
     
@@ -356,15 +356,15 @@ class AudibleCoachScene: GameScene {
         
         let sessionChangeTypeAsObject = notification.userInfo![AVAudioSessionInterruptionTypeKey] as! UInt
         
-        let sessionChange = AVAudioSessionInterruptionType(rawValue: sessionChangeTypeAsObject)
+        let sessionChange = AVAudioSession.InterruptionType(rawValue: sessionChangeTypeAsObject)
         
         if let session = sessionChange{
-            if session == .Began{
+            if session == .began{
                 print("handleSessionChanged::audio session interrupt began")
                 /*if(myAudioEngine.running){
                     myAudioEngine.pause()
                 }*/
-            }else if session == .Ended{
+            }else if session == .ended{
                 print("handleSessionChanged::audio session interrupt ended")
                 makeEngineConnections()
                 tryStartAudioEngine()
@@ -377,25 +377,25 @@ class AudibleCoachScene: GameScene {
         let routeChangeTypeAsObject =
         notification.userInfo![AVAudioSessionRouteChangeReasonKey] as! NSNumber
         
-        let routeChange = AVAudioSessionRouteChangeReason(rawValue:
-            routeChangeTypeAsObject.unsignedLongValue)
+        let routeChange = AVAudioSession.RouteChangeReason(rawValue:
+            routeChangeTypeAsObject.uintValue)
         
         if let route = routeChange{
-            if route == .Unknown{
+            if route == .unknown{
                 print("handleRouteChange:Unknown ")
-            }else if route == .NewDeviceAvailable{
+            }else if route == .newDeviceAvailable{
                 print("handleRouteChange:NewDeviceAvailable a headset was added or removed")
-            }else if route == .OldDeviceUnavailable{
+            }else if route == .oldDeviceUnavailable{
                 print("handleRouteChange:OldDeviceUnavailable a headset was added or removed")
-            }else if route == .CategoryChange{
+            }else if route == .categoryChange{
                 print("handleRouteChange:CategoryChange called at start - also when other audio wants to play")
-            }else if route == .Override{
+            }else if route == .override{
                 print("handleRouteChange:Override")
-            }else if route == .WakeFromSleep{
+            }else if route == .wakeFromSleep{
                 print("handleRouteChange:WakeFromSleep")
-            }else if route == .NoSuitableRouteForCategory{
+            }else if route == .noSuitableRouteForCategory{
                 print("handleRouteChange:NoSuitableRouteForCategory")
-            }else if route == .RouteConfigurationChange{
+            }else if route == .routeConfigurationChange{
                 print("handleRouteChange:RouteConfigurationChange")
             }
         }
@@ -408,13 +408,13 @@ class AudibleCoachScene: GameScene {
         debugAudioText.name = "debugAudioText"
         debugAudioText.fontSize = 10
         debugAudioText.fontName = "AvenirNext"
-        debugAudioText.position = CGPointMake(self.frame.width - 120, 18)
+        debugAudioText.position = CGPoint(x:self.frame.width - 120, y:18)
         
         let debugImpactText = SKLabelNode.init(text:"Impact")
         debugImpactText.name = "debugImpactText"
         debugImpactText.fontSize = 10
         debugImpactText.fontName = "AvenirNext"
-        debugImpactText.position = CGPointMake(self.frame.width - 120, 30)
+        debugImpactText.position = CGPoint(x:self.frame.width - 120, y:30)
         
         self.addChild(debugAudioText)
         self.addChild(debugImpactText)
@@ -422,8 +422,8 @@ class AudibleCoachScene: GameScene {
     
     func constructOutputConnectionFormatForEnvironment() -> AVAudioFormat{
         var environmentOutputConnectionFormat:AVAudioFormat?;
-        var numHardwareOutputChannels:AVAudioChannelCount = myAudioEngine.outputNode.outputFormatForBus(0).channelCount
-        let hardwareSampleRate = myAudioEngine.outputNode.outputFormatForBus(0).sampleRate
+        var numHardwareOutputChannels:AVAudioChannelCount = myAudioEngine.outputNode.outputFormat(forBus: 0).channelCount
+        let hardwareSampleRate = myAudioEngine.outputNode.outputFormat(forBus: 0).sampleRate
         
         // if we're connected to multichannel hardware, create a compatible multichannel format for the environment node
         if (numHardwareOutputChannels > 2 && numHardwareOutputChannels != 3) {
@@ -450,7 +450,7 @@ class AudibleCoachScene: GameScene {
             }
             
             // using that layout tag, now construct a format
-            let environmentOutputChannelLayout:AVAudioChannelLayout = AVAudioChannelLayout(layoutTag: environmentOutputLayoutTag)
+            let environmentOutputChannelLayout:AVAudioChannelLayout = AVAudioChannelLayout(layoutTag: environmentOutputLayoutTag)!
             environmentOutputConnectionFormat = AVAudioFormat(standardFormatWithSampleRate: hardwareSampleRate, channelLayout: environmentOutputChannelLayout)
             print("constructOutputConnectionFormatForEnvironment::multichannelOutputEnabled")
             multichannelOutputEnabled = true
@@ -460,19 +460,19 @@ class AudibleCoachScene: GameScene {
             multichannelOutputEnabled = false
             
             //if use stereomatrix it will have effect on multi channels only play stereo (Apple bugs?)
-            let environmentOutputChannelLayout:AVAudioChannelLayout = AVAudioChannelLayout(layoutTag: kAudioChannelLayoutTag_StereoHeadphones)
+            let environmentOutputChannelLayout:AVAudioChannelLayout = AVAudioChannelLayout(layoutTag: kAudioChannelLayoutTag_StereoHeadphones)!
             environmentOutputConnectionFormat = AVAudioFormat(standardFormatWithSampleRate: hardwareSampleRate, channelLayout: environmentOutputChannelLayout)
-            print("constructOutputConnectionFormatForEnvironment::multichannelOutputEnabled not")
-        }
+            print("constructOutputConnectionFormatForEString(describing: nvironment::multichannelOutputEnabled not")
+                }
         
-        print("OutputFormat.channelCount:\(environmentOutputConnectionFormat?.channelCount)/\(numHardwareOutputChannels) \(environmentOutputConnectionFormat)")
-        if let debugImpactNode:SKLabelNode = childNodeWithName("//debugImpactText") as? SKLabelNode{
-            debugImpactNode.text = "\(environmentOutputConnectionFormat)"
+        print("OutputFormat.channelCount:\(String(describing: environmentOutputConnectionFormat?.channelCount))/\(numHardwareOutputChannels) \(String(describing: environmentOutputConnectionFormat))")
+        if let debugImpactNode:SKLabelNode = childNode(withName: "//debugImpactText") as? SKLabelNode{
+            debugImpactNode.text = "\(String(describing: environmentOutputConnectionFormat))"
         }
         return environmentOutputConnectionFormat!;
     }
     
-    override func update(currentTime: CFTimeInterval) {
+    override func update(_ currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
 }

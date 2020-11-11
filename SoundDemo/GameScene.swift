@@ -23,7 +23,7 @@ class GameScene: SKScene {
     var rotationRecognizer: UIRotationGestureRecognizer!
     var rotationAngleInRadians = 0.0 as CGFloat
     
-    override func didMoveToView(view: SKView){
+    override func didMove(to view: SKView){
         initSettingButtonNode()
         
         let filter = CIFilter(name: "CIGaussianBlur")
@@ -34,7 +34,7 @@ class GameScene: SKScene {
         
         effectsNode.filter = filter
         effectsNode.position = self.view!.center
-        effectsNode.blendMode = .Alpha
+        effectsNode.blendMode = .alpha
         
         // Add the effects node to the scene
         self.addChild(effectsNode)
@@ -42,13 +42,13 @@ class GameScene: SKScene {
     }
     
     func initSettingButtonNode(){
-        let settingButton = UIButton(type: .Custom)
-        settingButton.setImage(UIImage(named: "pause"), forState: .Normal)
-        settingButton.setImage(UIImage(named: "pause"), forState: .Highlighted)
+        let settingButton = UIButton(type: .custom)
+        settingButton.setImage(UIImage(named: "pause"), for: .normal)
+        settingButton.setImage(UIImage(named: "pause"), for: .highlighted)
         let size:CGFloat = 35
-        settingButton.frame = CGRectMake(self.frame.maxX - size, 10, size, size)
+        settingButton.frame = CGRect(x: self.frame.maxX - size, y: 10, width: size, height: size)
         
-        settingButton.addTarget(self, action: Selector("settingButtonTouched"), forControlEvents: .TouchUpInside)
+        settingButton.addTarget(self, action: Selector(("settingButtonTouched")), for: .touchUpInside)
         
         self.view?.addSubview(settingButton)
     }
@@ -57,7 +57,7 @@ class GameScene: SKScene {
         /*if let vc = self.view?.window?.rootViewController?.navigationController?.visibleViewController{
             vc.removeFromParentViewController()
         }*/
-         NSNotificationCenter.defaultCenter().postNotificationName("quitScene", object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "quitScene"), object: nil)
     }
     
     @IBAction func ContinueTouchup(sender: AnyObject) {
@@ -65,7 +65,7 @@ class GameScene: SKScene {
     }
     func settingButtonTouched(){
         myAudioEngine.pause()
-        self.paused = true
+        self.isPaused = true
         
         //for bluring the background
         //let bgImg = screenShot()
@@ -77,8 +77,8 @@ class GameScene: SKScene {
         blurView!.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         self.view!.addSubview(blurView!)*/
         
-        settingMenu = NSBundle.mainBundle().loadNibNamed("SettingView", owner: self, options: nil)[0] as? UIView
-        settingMenu!.frame = CGRectMake(50, 100, self.frame.maxX - 100, self.frame.maxY - 200)
+        settingMenu = Bundle.main.loadNibNamed("SettingView", owner: self, options: nil)?[0] as? UIView
+        settingMenu!.frame = CGRect(x: 50, y: 100, width: self.frame.maxX - 100, height: self.frame.maxY - 200)
         self.view?.addSubview(settingMenu!)
      
         
@@ -93,7 +93,7 @@ class GameScene: SKScene {
         //helloWorldLabel.transform = CGAffineTransformMakeRotation(rotationAngleInRadians + sender.rotation)
         
         /* At the end of the rotation, keep the angle for later use */
-        if sender.state == .Ended{
+        if sender.state == .ended{
             //rotationAngleInRadians += sender.rotation;
         }
         
@@ -101,9 +101,9 @@ class GameScene: SKScene {
     
     func continueDemo(){
         //myAudioEngine.start()
-        self.paused = false
+        self.isPaused = false
         
-        UIView.animateWithDuration(0.5, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             self.settingMenu?.alpha = 0.0
             },completion: {(value: Bool) in
                 self.settingMenu?.removeFromSuperview()
@@ -114,7 +114,7 @@ class GameScene: SKScene {
     }
     
     func tryStartAudioEngine(){
-        if(!myAudioEngine.running){
+        if(!myAudioEngine.isRunning){
             myAudioEngine.prepare()
             do{
                 try myAudioEngine.start()
@@ -125,12 +125,12 @@ class GameScene: SKScene {
     }
     
     func screenShot() -> UIImage {
-        UIGraphicsBeginImageContext(UIScreen.mainScreen().bounds.size)
+        UIGraphicsBeginImageContext(UIScreen.main.bounds.size)
         //let context:CGContextRef  = UIGraphicsGetCurrentContext()!
-        self.view?.drawViewHierarchyInRect(frame, afterScreenUpdates: true)
+        self.view?.drawHierarchy(in: frame, afterScreenUpdates: true)
         let screenShot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext();
-        return screenShot 
+        return screenShot! 
     }
     
     

@@ -11,7 +11,7 @@ import AVFoundation
 
 struct TouchInfo {
     var location:CGPoint
-    var time:NSTimeInterval
+    var time:TimeInterval
 }
 
 class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
@@ -39,27 +39,27 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
     
     var multichannelOutputEnabled = false
     
-    override func didMoveToView(view: SKView) {
-        super.didMoveToView(view)
+    override func didMove(to view: SKView) {
+        super.didMove(to: view)
         addDebugText()
   
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "handleInterruption:",
-            name: AVAudioEngineConfigurationChangeNotification,
+        NotificationCenter.default.addObserver(self,
+                                               selector: Selector(("handleInterruption:")),
+            name: NSNotification.Name.AVAudioEngineConfigurationChange,
             object: nil)
         //for session change
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "handleSessionChange:",
-            name: AVAudioSessionInterruptionNotification,
+        NotificationCenter.default.addObserver(self,
+                                               selector: Selector(("handleSessionChange:")),
+            name: AVAudioSession.interruptionNotification,
             object: AVAudioSession.sharedInstance())
         
         //this does not get called
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "handleRouteChange:",
-            name: AVAudioSessionRouteChangeNotification,
+        NotificationCenter.default.addObserver(self,
+                                               selector: Selector(("handleRouteChange:")),
+            name: AVAudioSession.routeChangeNotification,
             object: AVAudioSession.sharedInstance())
 
-        let physicsBody = SKPhysicsBody (edgeLoopFromRect: self.frame)
+        let physicsBody = SKPhysicsBody (edgeLoopFrom: self.frame)
         self.physicsBody = physicsBody
         self.physicsBody?.friction = 0.4
         self.physicsBody?.collisionBitMask = 1
@@ -72,13 +72,13 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         sprite.yScale = 1.0
         sprite.zPosition = CGFloat(2)
         sprite.name = "listener"
-        sprite.position = CGPointMake(CGRectGetMidX(self.frame),CGRectGetMidY(self.frame))
+        sprite.position = CGPoint(x:self.frame.midX,y:self.frame.midY)
         self.addChild(sprite)
 
         self.listener = sprite
         
         enviromentNode.reverbParameters.enable = true
-        enviromentNode.reverbParameters.loadFactoryReverbPreset(.LargeRoom)
+        enviromentNode.reverbParameters.loadFactoryReverbPreset(.largeRoom)
         enviromentNode.reverbParameters.level = -20
         enviromentNode.volume = 1
         enviromentNode.position = AVAudioMake3DPoint(Float(0),Float(0),Float(0))
@@ -88,34 +88,34 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         //defalut orientation is face forward, point up
         //enviromentNode.listenerVectorOrientation = AVAudio3DVectorOrientation(forward: AVAudio3DVector(x: 0,y: 0,z: -1), up:AVAudio3DVector(x: 0,y: 1,z: 0))
   
-        fireSoundBuffer = loadSoundIntoBuffer("Crackling_Fireplace",type: "wav")
-        waterSoundBuffer = loadSoundIntoBuffer("water-streamMono",type:"wav")
-        collisionSoundBuffer = loadSoundIntoBuffer("bounce")
-        launchSoundBuffer = loadSoundIntoBuffer("launchSound")
+        fireSoundBuffer = loadSoundIntoBuffer(filename: "Crackling_Fireplace",type: "wav")
+        waterSoundBuffer = loadSoundIntoBuffer(filename: "water-streamMono",type:"wav")
+        collisionSoundBuffer = loadSoundIntoBuffer(filename: "bounce")
+        launchSoundBuffer = loadSoundIntoBuffer(filename: "launchSound")
         collisionPlayerNode.reverbBlend = 0.2
         collisionPlayerNode.volume = 1
         launchPlayerNode.volume = 0.35
  
-        myAudioEngine.attachNode(firePlayNode)
-        myAudioEngine.attachNode(waterPlayNode)
-        myAudioEngine.attachNode(collisionPlayerNode)
-        myAudioEngine.attachNode(launchPlayerNode)
-        myAudioEngine.attachNode(enviromentNode)
+        myAudioEngine.attach(firePlayNode)
+        myAudioEngine.attach(waterPlayNode)
+        myAudioEngine.attach(collisionPlayerNode)
+        myAudioEngine.attach(launchPlayerNode)
+        myAudioEngine.attach(enviromentNode)
         
         updateAudioSession()
         makeEngineConnections()
         
-        self.addChild(self.createBall(CGPointMake(300, 500)))
+        self.addChild(self.createBall(position: CGPoint(x:300, y:500)))
     }
     
     func loadSoundIntoBuffer(filename:String, type:String) -> AVAudioPCMBuffer?{
-        let soundFileURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource(filename, ofType: type)!)
+        let soundFileURL = NSURL(fileURLWithPath: Bundle.main.path(forResource: filename, ofType: type)!)
         do{
-            let soundFile = try AVAudioFile(forReading: soundFileURL, commonFormat: .PCMFormatFloat32, interleaved: false)
+            let soundFile = try AVAudioFile(forReading: soundFileURL as URL, commonFormat: .pcmFormatFloat32, interleaved: false)
             
-            let outputBuffer = AVAudioPCMBuffer(PCMFormat: soundFile.processingFormat, frameCapacity:UInt32(soundFile.length))
+            let outputBuffer = AVAudioPCMBuffer(pcmFormat: soundFile.processingFormat, frameCapacity:UInt32(soundFile.length))
             
-            try soundFile.readIntoBuffer(outputBuffer)
+            try soundFile.read(into: outputBuffer!)
             return outputBuffer
         }catch let error as NSError {
             print ("Error loadSoundIntoBuffer: \(error.domain)")
@@ -125,7 +125,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
     }
     
     func loadSoundIntoBuffer(filename:String) -> AVAudioPCMBuffer?{
-        return loadSoundIntoBuffer(filename,type: "caf")
+        return loadSoundIntoBuffer(filename: filename,type: "caf")
     }
     
     func makeEngineConnections(){
@@ -154,7 +154,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
     func updateAudioSession(){
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            let category = AVAudioSessionCategoryPlayback
+            let category = AVAudioSession.Category.playback
             //let category = AVAudioSessionCategoryMultiRoute
             //let category = AVAudioSessionCategoryAmbient
             try audioSession.setCategory(category)
@@ -171,7 +171,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
             //let actualChannelCount = audioSession.outputNumberOfChannels
             // adapt to the actual number of output channels
         } catch let error as NSError{
-            if let debugImpactNode:SKLabelNode = childNodeWithName("//debugImpactText") as? SKLabelNode{
+            if let debugImpactNode:SKLabelNode = childNode(withName: "//debugImpactText") as? SKLabelNode{
                 debugImpactNode.text = "Error session: \(error.domain)"
             }
             print("Error setting avAudioSession")
@@ -181,7 +181,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         let MaxNumChannels = AVAudioSession.sharedInstance().maximumOutputNumberOfChannels
 
         //if there are more than 2 channels, use sound field
-        let algorithm:AVAudio3DMixingRenderingAlgorithm = (numChannels <= 2) ? .HRTF : .SoundField
+        let algorithm:AVAudio3DMixingRenderingAlgorithm = (numChannels <= 2) ? .HRTF : .soundField
 
         //myAudioEngine.mainMixerNode.renderingAlgorithm = algorithm
         collisionPlayerNode.renderingAlgorithm = algorithm
@@ -205,7 +205,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         print("Set rendering algorithm: \(algorithm)")
         
         //print out
-        if let debugAudioNode:SKLabelNode = childNodeWithName("//debugAudioText") as? SKLabelNode{
+        if let debugAudioNode:SKLabelNode = childNode(withName: "//debugAudioText") as? SKLabelNode{
             //debugAudioNode.text = "type:\(AVAudioSession.sharedInstance().currentRoute.outputs)"
             //usally number of avilable outputs count is 1
             let availableOuput = AVAudioSession.sharedInstance().currentRoute.outputs.count
@@ -216,8 +216,8 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         }
     }
     
-    override func didChangeSize(oldSize: CGSize) {
-        let physicsBody = SKPhysicsBody (edgeLoopFromRect: self.frame)
+    override func didChangeSize(_ oldSize: CGSize) {
+        let physicsBody = SKPhysicsBody (edgeLoopFrom: self.frame)
         self.physicsBody = physicsBody
     }
 
@@ -230,7 +230,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         ball.name = "ball"
         
         ball.physicsBody = SKPhysicsBody(circleOfRadius: 20.0)
-        ball.physicsBody?.dynamic = true
+        ball.physicsBody?.isDynamic = true
         ball.physicsBody?.restitution = 0.5
         ball.physicsBody?.affectedByGravity = false
         ball.physicsBody?.mass = 5
@@ -240,10 +240,10 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         //ball.physicsBody?.usesPreciseCollisionDetection = true
         ball.physicsBody?.contactTestBitMask = 1
 
-        positionMark.fillColor = SKColor.blackColor()
+        positionMark.fillColor = SKColor.black
         positionMark.position.y = -12
         //positionMark.physicsBody?.pinned = true;
-        positionMark.physicsBody?.dynamic = false;
+        positionMark.physicsBody?.isDynamic = false;
         ball.addChild(positionMark)
         
         /*let audioNodeBall = SKAudioNode(fileNamed: "bounce.caf")
@@ -261,15 +261,15 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
     }
     
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.locationInNode(self)
-            let node = self.nodeAtPoint(location)
+            let location = touch.location(in: self)
+            let node = self.atPoint(location)
             if (node.name == "ball") {
                 // Step 1
                 selectedNode = node as? SKShapeNode;
                 // Stop the sprite
-                selectedNode?.physicsBody?.velocity = CGVectorMake(0,0)
+                selectedNode?.physicsBody?.velocity = CGVector(dx:0,dy:0)
                 // Step 2: save information about the touch
                 history = [TouchInfo(location:location, time:touch.timestamp)]
             }
@@ -280,7 +280,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
                     let actionPlay = SKAction.play()
                     audioNodeRed.runAction(actionPlay)
                 }*/
-                firePlayNode.scheduleBuffer(fireSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
+                firePlayNode.scheduleBuffer(fireSoundBuffer,at:nil,options:.loops,completionHandler:nil)
                 //firePlayNode.scheduleBuffer(fireSoundBuffer!, completionHandler: nil)
                 firePlayNode.position = AVAudioMake3DPoint(Float(node.position.x * scale),Float(0),Float(-node.position.y * scale))
                 firePlayNode.play()
@@ -289,7 +289,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
                     let actionPlay = SKAction.play()
                     audioNodeBlue.runAction(actionPlay)
                 }*/
-                waterPlayNode.scheduleBuffer(waterSoundBuffer,atTime:nil,options:.Loops,completionHandler:nil)
+                waterPlayNode.scheduleBuffer(waterSoundBuffer,at:nil,options:.loops,completionHandler:nil)
                 //waterPlayNode.scheduleBuffer(waterSoundBuffer!, completionHandler: nil)
                 waterPlayNode.position = AVAudioMake3DPoint(Float(node.position.x * scale),Float(0),Float(-node.position.y * scale))
                 waterPlayNode.play()
@@ -299,30 +299,30 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         }
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.locationInNode(self)
+            let location = touch.location(in: self)
             
-            let touchNode = self.nodeAtPoint(location)
+            let touchNode = self.atPoint(location)
             
             //for throwing balls
             if (selectedNode != nil) {
                 // Step 1. update sprite's position
                 selectedNode?.position = location
                 // Step 2. save touch data at index 0
-                history?.insert(TouchInfo(location:location, time:touch.timestamp),atIndex:0)
+                history?.insert(TouchInfo(location:location, time:touch.timestamp),at:0)
                 return
             }
     
             //dont move the listener
-            if(touchNode.isKindOfClass(SKSpriteNode) && touchNode.name != "listener"){
+            if(touchNode is SKSpriteNode && touchNode.name != "listener"){
                 touchNode.position = location
                 if(touchNode.name == "redNode"){
                     firePlayNode.position = AVAudioMake3DPoint(Float(touchNode.position.x * scale),Float(0),Float(-touchNode.position.y * scale))
                 }else if(touchNode.name == "blueNode"){
                     waterPlayNode.position = AVAudioMake3DPoint(Float(touchNode.position.x * scale),Float(0),Float(-touchNode.position.y * scale))
                 }
-            }else if(touchNode.isKindOfClass(SKShapeNode)){
+            }else if(touchNode is SKShapeNode){
                 //touchNode.position = location
                 //let velocity = touch.v
             }
@@ -330,7 +330,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
     }
     
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if (selectedNode != nil && history!.count > 1) {
             var vx:CGFloat = 0.0
             var vy:CGFloat = 0.0
@@ -356,7 +356,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
             }
             let count = CGFloat(numElts-1)
             // Step 4
-            let velocity = CGVectorMake(vx/count,vy/count)
+            let velocity = CGVector(dx:vx/count,dy:vy/count)
                 selectedNode?.physicsBody?.velocity = velocity
             // Step 5
             selectedNode = nil
@@ -389,15 +389,15 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         
         let sessionChangeTypeAsObject = notification.userInfo![AVAudioSessionInterruptionTypeKey] as! UInt
         
-        let sessionChange = AVAudioSessionInterruptionType(rawValue: sessionChangeTypeAsObject)
+        let sessionChange = AVAudioSession.InterruptionType(rawValue: sessionChangeTypeAsObject)
         
         if let session = sessionChange{
-            if session == .Began{
+            if session == .began{
                 print("handleSessionChanged::audio session interrupt began")
-                if(myAudioEngine.running){
+                if(myAudioEngine.isRunning){
                     myAudioEngine.pause()
                 }
-            }else if session == .Ended{
+            }else if session == .ended{
                 print("handleSessionChanged::audio session interrupt ended")
                 makeEngineConnections()
                 tryStartAudioEngine()
@@ -432,25 +432,25 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         let routeChangeTypeAsObject =
         notification.userInfo![AVAudioSessionRouteChangeReasonKey] as! NSNumber
         
-        let routeChange = AVAudioSessionRouteChangeReason(rawValue:
-            routeChangeTypeAsObject.unsignedLongValue)
+        let routeChange = AVAudioSession.RouteChangeReason(rawValue:
+            routeChangeTypeAsObject.uintValue)
         
         if let route = routeChange{
-            if route == .Unknown{
+            if route == .unknown{
                 print("handleRouteChange:Unknown ")
-            }else if route == .NewDeviceAvailable{
+            }else if route == .newDeviceAvailable{
                 print("handleRouteChange:NewDeviceAvailable a headset was added or removed")
-            }else if route == .OldDeviceUnavailable{
+            }else if route == .oldDeviceUnavailable{
                 print("handleRouteChange:OldDeviceUnavailable a headset was added or removed")
-            }else if route == .CategoryChange{
+            }else if route == .categoryChange{
                 print("handleRouteChange:CategoryChange called at start - also when other audio wants to play")
-            }else if route == .Override{
+            }else if route == .override{
                 print("handleRouteChange:Override")
-            }else if route == .WakeFromSleep{
+            }else if route == .wakeFromSleep{
                 print("handleRouteChange:WakeFromSleep")
-            }else if route == .NoSuitableRouteForCategory{
+            }else if route == .noSuitableRouteForCategory{
                 print("handleRouteChange:NoSuitableRouteForCategory")
-            }else if route == .RouteConfigurationChange{
+            }else if route == .routeConfigurationChange{
                 print("handleRouteChange:RouteConfigurationChange")
             }
         }
@@ -458,7 +458,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
    
     func didBeginContact(contact: SKPhysicsContact) {
         //let ballListener:SKSpriteNode = childNodeWithName("//listener") as! SKSpriteNode
-        playCollisionSound(contact.contactPoint, impulse:Float(contact.collisionImpulse))
+        playCollisionSound(impactPosition: contact.contactPoint, impulse:Float(contact.collisionImpulse))
         print("CollisionSound at \(contact.contactPoint) with impact \(contact.collisionImpulse)")
         /*if let audioNodeBall:SKAudioNode = childNodeWithName("//audioNodeBall") as? SKAudioNode{
             print("audioNodeBall: \(audioNodeBall.avAudioNode)")
@@ -502,10 +502,11 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         }*/
     }
     
-    func calculateVolumeForImpulse(var impulse:Float) -> Float{
+    func calculateVolumeForImpulse(impulse:Float) -> Float{
         // Simple mapping of impulse to volume
         let volMinDB:Float = -20
         let impulseMax:Float = 20000
+        var impulse = impulse
         if (impulse > impulseMax){
             impulse = impulseMax
         }
@@ -516,7 +517,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         return calculatedVolume
     }
     
-    func calculatePlaybackRateForImpulse(var impulse:Float) -> Float{
+    func calculatePlaybackRateForImpulse(impulse:Float) -> Float{
         // Simple mapping of impulse to playback rate (pitch)
         // This gives the effect of the pitch dropping as the impulse reduces
         let rateMax:Float = 1.2
@@ -525,6 +526,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         let impulseMax:Float = 20000
         let impulseMin:Float = 100
         let impulseRange = impulseMax - impulseMin
+        var impulse = impulse
         
         if (impulse > impulseMax)  { impulse = impulseMax }
         if (impulse < impulseMin)  { impulse = impulseMin }
@@ -538,27 +540,27 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
         debugAudioText.name = "debugAudioText"
         debugAudioText.fontSize = 10
         debugAudioText.fontName = "AvenirNext"
-        debugAudioText.position = CGPointMake(self.frame.width - 120, 18)
+        debugAudioText.position = CGPoint(x:self.frame.width - 120, y:18)
         
         let debugImpactText = SKLabelNode.init(text:"Impact")
         debugImpactText.name = "debugImpactText"
         debugImpactText.fontSize = 10
         debugImpactText.fontName = "AvenirNext"
-        debugImpactText.position = CGPointMake(self.frame.width - 120, 30)
+        debugImpactText.position = CGPoint(x:self.frame.width - 120, y:30)
         
         self.addChild(debugAudioText)
         self.addChild(debugImpactText)
     }
     
     func playCollisionSound(impactPosition:CGPoint, impulse:Float){
-        if (myAudioEngine.running) {
+        if (myAudioEngine.isRunning) {
              collisionPlayerNode.position = AVAudioMake3DPoint(Float(impactPosition.x * scale),Float(0),Float(-impactPosition.y * scale))
-            collisionPlayerNode.scheduleBuffer(collisionSoundBuffer!, atTime: nil, options: .Interrupts, completionHandler: nil)
-            collisionPlayerNode.volume = calculateVolumeForImpulse(impulse)
-            collisionPlayerNode.rate = self.calculatePlaybackRateForImpulse(impulse)
+            collisionPlayerNode.scheduleBuffer(collisionSoundBuffer!, at: nil, options: .interrupts, completionHandler: nil)
+            collisionPlayerNode.volume = calculateVolumeForImpulse(impulse: impulse)
+            collisionPlayerNode.rate = self.calculatePlaybackRateForImpulse(impulse: impulse)
             collisionPlayerNode.play()
             
-            if let debugImpactNode:SKLabelNode = childNodeWithName("//debugImpactText") as? SKLabelNode{
+            if let debugImpactNode:SKLabelNode = childNode(withName: "//debugImpactText") as? SKLabelNode{
                 debugImpactNode.text = "Impact:\(NSInteger(impulse)) volumn:\(collisionPlayerNode.volume) rate:\(collisionPlayerNode.rate)"
                 print("Impact:\(NSInteger(impulse)) volumn:\(collisionPlayerNode.volume) rate:\(collisionPlayerNode.rate)")
             }
@@ -568,7 +570,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
     }
     
     func playLaunchSound(){
-        if(myAudioEngine.running){
+        if(myAudioEngine.isRunning){
             launchPlayerNode.scheduleBuffer(launchSoundBuffer!, completionHandler: nil)
             launchPlayerNode.play()
         }else{
@@ -578,8 +580,8 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
     
     func constructOutputConnectionFormatForEnvironment() -> AVAudioFormat{
         var environmentOutputConnectionFormat:AVAudioFormat?;
-        var numHardwareOutputChannels:AVAudioChannelCount = myAudioEngine.outputNode.outputFormatForBus(0).channelCount
-        let hardwareSampleRate = myAudioEngine.outputNode.outputFormatForBus(0).sampleRate
+        var numHardwareOutputChannels:AVAudioChannelCount = myAudioEngine.outputNode.outputFormat(forBus: 0).channelCount
+        let hardwareSampleRate = myAudioEngine.outputNode.outputFormat(forBus: 0).sampleRate
         
         // if we're connected to multichannel hardware, create a compatible multichannel format for the environment node
         if (numHardwareOutputChannels > 2 && numHardwareOutputChannels != 3) {
@@ -606,7 +608,7 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
             }
             
             // using that layout tag, now construct a format
-            let environmentOutputChannelLayout:AVAudioChannelLayout = AVAudioChannelLayout(layoutTag: environmentOutputLayoutTag)
+            let environmentOutputChannelLayout:AVAudioChannelLayout = AVAudioChannelLayout(layoutTag: environmentOutputLayoutTag)!
             environmentOutputConnectionFormat = AVAudioFormat(standardFormatWithSampleRate: hardwareSampleRate, channelLayout: environmentOutputChannelLayout)
             print("constructOutputConnectionFormatForEnvironment::multichannelOutputEnabled")
             multichannelOutputEnabled = true
@@ -622,14 +624,14 @@ class SurroundSoundScene: GameScene, SKPhysicsContactDelegate {
             print("constructOutputConnectionFormatForEnvironment::multichannelOutputEnabled not")
         }
         
-        print("OutputFormat.channelCount:\(environmentOutputConnectionFormat?.channelCount)/\(numHardwareOutputChannels) \(environmentOutputConnectionFormat)")
-        if let debugImpactNode:SKLabelNode = childNodeWithName("//debugImpactText") as? SKLabelNode{
-            debugImpactNode.text = "\(environmentOutputConnectionFormat)"
+        //print("OutputFormaString(describing: t.channelCount:\(environmentOutputConnectionFor)mat?.channelCount)/\(numHardwareOutputChannels) \(String(describing: environmentOutputConnectionFormat))")
+        if let debugImpactNode:SKLabelNode = childNode(withName: "//debugImpactText") as? SKLabelNode{
+            debugImpactNode.text = "\(String(describing: environmentOutputConnectionFormat))"
         }
         return environmentOutputConnectionFormat!;
     }
     
-    override func update(currentTime: CFTimeInterval) {
+    override func update(_ currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
 }
